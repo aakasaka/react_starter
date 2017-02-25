@@ -11,9 +11,7 @@ ReactDOM.render(
     document.getElementById("first")
 )
 
-export interface HelloProps { compiler: string; framework: string };
-
-//<HelloProps,undefined> これなに？
+//React Tutorial
 ReactDOM.render(
     <Game/>,
     document.getElementById("game")

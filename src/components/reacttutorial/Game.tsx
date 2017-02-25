@@ -18,9 +18,10 @@ export interface history{
 export class Game extends React.Component<any,GameState>{
     constructor() {
         super();
+        const nullarr:Array<string> = new Array(9);
         this.state = {
             // history: [{ squares: Array[9].fill(null) }],
-            history:[{squares:[null,null,null,null,null,null,null,null,null]}],
+            history:[{squares:nullarr}],
             xIsNext: true,
         }
     }
