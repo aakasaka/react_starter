@@ -1,6 +1,6 @@
-import * as React from "react";
+import * as React from "react"; //load typescript define from react? or load libraries?
 import * as ReactDOM from "react-dom";
-import {Game} from "./components/reacttutorial/Game"
+import {Game} from "./components/reacttutorial/Game" //load components from components folder
 import { Helloworld } from "./components/Hello";
 
 
@@ -11,9 +11,6 @@ ReactDOM.render(
     document.getElementById("first")
 )
 
-export interface HelloProps { compiler: string; framework: string };
-
-//<HelloProps,undefined> これなに？
 ReactDOM.render(
     <Game/>,
     document.getElementById("game")
