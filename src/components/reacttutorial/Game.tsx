@@ -1,13 +1,13 @@
 import * as React from "react";
-import {Boad} from "./Boad";
+import {Board} from "./Board";
 
 
-export interface BordState{
+export interface BoardState{
     squares:string[]
 }
 
 export interface GameState{
-    history:BordState[],
+    history:BoardState[],
     xIsNext:boolean
 }
 
@@ -53,7 +53,7 @@ export class Game extends React.Component<any,GameState>{
         return (
             <div className="game">
                 <div className="game-board">
-                    <Boad squares={current.squares} onClick={(i:number) => this.handleClick(i)} />
+                    <Board squares={current.squares} onClick={(i:number) => this.handleClick(i)} />
                 </div>
                 <div className="game-info">
                     <div>{status}</div>

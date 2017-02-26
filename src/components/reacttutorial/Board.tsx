@@ -1,12 +1,12 @@
 import * as React from "react";
 import {Square} from "./Square";
 
-export interface BoadProps extends React.Props<any> {
+export interface BoardProps extends React.Props<any> {
     squares: string[],
     onClick:any,
 }
 
-export class Boad extends React.Component<BoadProps, undefined>{
+export class Board extends React.Component<BoardProps, undefined>{
     renderSquare(i:number){
         return <Square value={this.props.squares[i]} onClick={()=>this.props.onClick(i)}/>;
     }
