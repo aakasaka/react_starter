@@ -1,13 +1,13 @@
 import * as React from "react";
-import {Boad} from "./Boad";
+import {Board} from "./Board";
 
 
-export interface BordState{
+export interface BoardState{
     squares:string[]
 }
 
 export interface GameState{
-    history:BordState[],
+    history:BoardState[],
     xIsNext:boolean
 }
 
@@ -18,10 +18,8 @@ export interface history{
 export class Game extends React.Component<any,GameState>{
     constructor() {
         super();
-        const nullarr:Array<string> = new Array(9);
         this.state = {
-            // history: [{ squares: Array[9].fill(null) }],
-            history:[{squares:nullarr}],
+            history:[{squares:new Array<string>(9)}],
             xIsNext: true,
         }
     }
@@ -53,7 +51,7 @@ export class Game extends React.Component<any,GameState>{
         return (
             <div className="game">
                 <div className="game-board">
-                    <Boad squares={current.squares} onClick={(i:number) => this.handleClick(i)} />
+                    <Board squares={current.squares} onClick={(i:number) => this.handleClick(i)} />
                 </div>
                 <div className="game-info">
                     <div>{status}</div>
