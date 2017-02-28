@@ -1,7 +1,6 @@
 import * as React from "react";
 import {Board} from "./Board";
 
-
 export interface BoardState{
     squares:string[]
 }
@@ -10,10 +9,6 @@ export interface GameState{
     history:BoardState[],
     xIsNext:boolean,
     stepNumber:number,
-}
-
-export interface history{
-    square:string[]
 }
 
 export class Game extends React.Component<any,GameState>{
