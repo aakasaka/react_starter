@@ -8,7 +8,8 @@ export interface BoardState{
 
 export interface GameState{
     history:BoardState[],
-    xIsNext:boolean
+    xIsNext:boolean,
+    stepNumber:number,
 }
 
 export interface history{
@@ -21,33 +22,55 @@ export class Game extends React.Component<any,GameState>{
         this.state = {
             history:[{squares:new Array<string>(9)}],
             xIsNext: true,
+            stepNumber: 0,
         }
     }
     handleClick(i: number) {
-        const history = this.state.history;
-        const current = this.state.history[history.length - 1];
-        const squares = current.squares.slice();
-        const winner = calculateWinner(current.squares);
-        if (calculateWinner(current.squares) || current.squares[i]) {
+        const history = this.state.history.slice(0, this.state.stepNumber + 1);
+        const current = history[history.length - 1];
+        const sq = current.squares.slice();
+        const winner = calculateWinner(sq);
+        if (winner || sq[i]) {
             return;
         }
-        squares[i] = this.state.xIsNext ? 'x' : 'o';
+        sq[i] = this.state.xIsNext ? 'x' : 'o';
 
         this.setState({
-            history: history.concat([{ squares: squares }]),
+            history: history.concat([{ squares: sq }]),
             xIsNext: !this.state.xIsNext,
+            stepNumber: history.length,
         });
     }
-  render() {
+
+    jumpTo(step: number) {
+        this.setState({
+            stepNumber: step,
+            xIsNext: (step % 2) === 0,
+        });
+    }
+
+    render() {
         const history = this.state.history;
-        const current = history[history.length - 1];
+        const current = history[this.state.stepNumber];
         const winner = calculateWinner(current.squares);
+
         let status;
         if (winner) {
             status = 'Winner :' + winner;
         } else {
             status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
         }
+
+        const moves = history.map((s, i) => {
+            const text = (i === 0) ? 'Game start' : ('Move #' + i);
+
+            return (
+                <li key={i}>
+                    <a href="#" onClick={() => this.jumpTo(i)}>{text}</a>
+                </li>
+            );
+        });
+
         return (
             <div className="game">
                 <div className="game-board">
@@ -55,7 +78,7 @@ export class Game extends React.Component<any,GameState>{
                 </div>
                 <div className="game-info">
                     <div>{status}</div>
-                    <ol>{}</ol>
+                    <ol>{moves}</ol>
                 </div>
             </div>
         );
