@@ -107,25 +107,71 @@ function calculateWinner(squares: string[][]) {
     for (let i = 0; i < clmLen; i++) {
         const clm = squares.map(r => r[i]);
 
-        if (clm.every(c => clm[0] === c)) return clm[0]; 
+        if (clm[0] && clm.every(c => clm[0] === c)) return clm[0]; 
     }
 
-    //TODO
-    // //斜め
-    // const skewLen = squares.length <= clmLen ? squares.length : clmLen;
-    // if (squares.length == clmLen) {
-    //     //左上→右下
-    //     for (let ri = 0; ri < squares.length; ri++) {
-    //         if (squares.length - ri < skewLen) break;
+    //斜め
+    const skewLen = squares.length <= clmLen ? squares.length : clmLen;
 
-    //         let val : string;
-    //         let matched = 0;
-    //         for (let ci = 0; ci < clmLen; ci++) {
-    //             const row = squares[ri + matched];
+    // //左上→右下
+    for (let ri = 0; ri < squares.length; ri++) {
+        const restRowLen = squares.length - ri;
+        if (restRowLen < skewLen) break;
 
-    //         }
-    //     }
-    // }
+        for (let ci = 0; ci < clmLen; ci++) {
+            const restClmLen = clmLen - ci;
+            if (restClmLen < skewLen) break;
+
+            let val : string = null;
+            let isAllMatched = true;
+            for (let i = 0; i < skewLen; i++) {
+                const tmpVal = squares[ri + i][ci + i];
+                if (tmpVal == null) {
+                    isAllMatched = false;
+                    break;
+                }
+                if (val == null) {
+                    val = tmpVal;
+                    continue;
+                }
+                if (val !== tmpVal) {
+                    isAllMatched = false;
+                    break;
+                }
+            }
+            if (isAllMatched) return val;
+        }
+    }
+
+    // //右上→左下
+    for (let ri = 0; ri < squares.length; ri++) {
+        const restRowLen = squares.length - ri;
+        if (restRowLen < skewLen) break;
+
+        for (let ci = clmLen - 1; 0 <= ci; ci--) {
+            const restClmLen = ci + 1;
+            if (restClmLen < skewLen) break;
+
+            let val : string = null;
+            let isAllMatched = true;
+            for (let i = 0; i < skewLen; i++) {
+                const tmpVal = squares[ri + i][ci - i];
+                if (tmpVal == null) {
+                    isAllMatched = false;
+                    break;
+                }
+                if (val == null) {
+                    val = tmpVal;
+                    continue;
+                }
+                if (val !== tmpVal) {
+                    isAllMatched = false;
+                    break;
+                }
+            }
+            if (isAllMatched) return val;
+        }
+    }
 
     return null;
 }
