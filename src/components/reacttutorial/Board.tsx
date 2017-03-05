@@ -2,31 +2,33 @@ import * as React from "react";
 import {Square} from "./Square";
 
 export interface BoardProps extends React.Props<any> {
-    squares: string[],
-    onClick(i : number) : void,
+    squares: string[][],    //TODO ファーストクラスコレクションに
+    onClick(rowIdx : number, clmIdx : number) : void,
 }
 
 export class Board extends React.Component<BoardProps, undefined>{
-    renderSquare(i:number){
-        return <Square value={this.props.squares[i]} onClick={()=>this.props.onClick(i)}/>;
+
+    renderSquare(rowIdx : number, clmIdx : number){
+        return <Square value={this.props.squares[rowIdx][clmIdx]} onClick={()=>this.props.onClick(rowIdx, clmIdx)}/>;
     }
     render() {
         return (
             <div>
+                {/*TODO ループに*/}
                 <div className="board-row">
-                    {this.renderSquare(0)}
-                    {this.renderSquare(1)}
-                    {this.renderSquare(2)}
+                    {this.renderSquare(0, 0)}
+                    {this.renderSquare(0, 1)}
+                    {this.renderSquare(0, 2)}
                 </div>
                 <div className="board-row">
-                    {this.renderSquare(3)}
-                    {this.renderSquare(4)}
-                    {this.renderSquare(5)}
+                    {this.renderSquare(1, 0)}
+                    {this.renderSquare(1, 1)}
+                    {this.renderSquare(1, 2)}
                 </div>
                 <div className="board-row">
-                    {this.renderSquare(6)}
-                    {this.renderSquare(7)}
-                    {this.renderSquare(8)}
+                    {this.renderSquare(2, 0)}
+                    {this.renderSquare(2, 1)}
+                    {this.renderSquare(2, 2)}
                 </div>
             </div>
         );
