@@ -12,24 +12,22 @@ export class Board extends React.Component<BoardProps, undefined>{
         return <Square value={this.props.squares[rowIdx][clmIdx]} onClick={()=>this.props.onClick(rowIdx, clmIdx)}/>;
     }
     render() {
+        let divs = [];
+
+        for (let ri = 0; ri < this.props.squares.length; ri++) {
+            let sqs = [];
+
+            var row = this.props.squares[ri];
+            for (let ci = 0; ci < row.length; ci++) {
+                sqs.push(this.renderSquare(ri, ci));
+            }
+
+            divs.push(<div className="board-row">{sqs}</div>);
+        }
+
         return (
             <div>
-                {/*TODO ループに*/}
-                <div className="board-row">
-                    {this.renderSquare(0, 0)}
-                    {this.renderSquare(0, 1)}
-                    {this.renderSquare(0, 2)}
-                </div>
-                <div className="board-row">
-                    {this.renderSquare(1, 0)}
-                    {this.renderSquare(1, 1)}
-                    {this.renderSquare(1, 2)}
-                </div>
-                <div className="board-row">
-                    {this.renderSquare(2, 0)}
-                    {this.renderSquare(2, 1)}
-                    {this.renderSquare(2, 2)}
-                </div>
+                {divs}
             </div>
         );
     }
