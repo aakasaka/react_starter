@@ -16,11 +16,14 @@ export class Game extends React.Component<any,GameState>{
     constructor() {
         super();
 
-        //TODO 定数化
-        var squares = new Array<string[]>(3);
-        squares[0] = [null, null, null];
-        squares[1] = [null, null, null];
-        squares[2] = [null, null, null];
+        var squares = new Array<string[]>(BoardConsts.ROW_COUNT);
+        for (let ri = 0; ri < squares.length; ri++) {
+            const row = new Array(BoardConsts.COLUMN_COUNT);
+            for (let ci = 0; ci < row.length; ci++) {
+                row[ci] = null;
+            }
+            squares[ri] = row;
+        }
 
         this.state = {
             history:[{squares:squares}],
