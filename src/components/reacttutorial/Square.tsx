@@ -5,12 +5,15 @@ import { Button } from 'react-bootstrap';
 export interface SquareProps extends React.Props<Square> {
     value: string,
     onClick(): void,
+    isHighlighted: boolean,
 };
 //
 export class Square extends React.Component<SquareProps, undefined> {
     render() {
+        const btnStyle = this.props.isHighlighted ? "info" : "default";
+
         return (
-            <Button className="square" onClick={() => this.props.onClick()}>
+            <Button className="square" onClick={() => this.props.onClick()} bsStyle={btnStyle}>
                 {this.props.value}
             </Button>
         )

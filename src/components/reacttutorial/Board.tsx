@@ -10,7 +10,8 @@ export interface BoardProps extends React.Props<any> {
 export class Board extends React.Component<BoardProps, undefined>{
 
     renderSquare(rowIdx : number, clmIdx : number){
-        return <Square value={this.props.squares.GetValue(rowIdx, clmIdx)} onClick={()=>this.props.onClick(rowIdx, clmIdx)}/>;
+        return <Square value={this.props.squares.GetValue(rowIdx, clmIdx)} onClick={()=>this.props.onClick(rowIdx, clmIdx)}
+                       isHighlighted={true/*TODO*/} />;
     }
     render() {
         let divs = [];
