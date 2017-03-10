@@ -69,10 +69,11 @@ export class Game extends React.Component<any,GameState>{
 
         const moves = history.map((s, i) => {
             const text = (i === 0) ? 'Game start' : ('Move #' + i);
+            const clsName = i === this.state.stepNumber ? "history-current" : "history";
 
             return (
                 <li key={i}>
-                    <a href="#" onClick={() => this.jumpTo(i)}>{text}</a>
+                    <a className={clsName} href="#" onClick={() => this.jumpTo(i)}>{text}</a>
                 </li>
             );
         });

@@ -51,3 +51,12 @@ ol, ul {
 .game-info {
   margin-left: 20px;
 }
+
+.history {
+  font-weight: normal;
+}
+
+.history-current {
+  font-weight: bold;
+}
+
