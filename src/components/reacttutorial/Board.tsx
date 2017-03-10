@@ -30,7 +30,7 @@ export class Board extends React.Component<BoardProps, undefined>{
         }
 
         return (
-            <div>
+            <div className="board">
                 {divs}
             </div>
         );
