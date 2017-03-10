@@ -1,9 +1,11 @@
 import * as React from "react";
 import {Board} from "./Board";
-
+import "../../Linq";
+import {StringTable} from "../../StringTable";
+import {BoardConsts} from "./BoardConsts";
 
 export interface BoardState{
-    squares:string[]
+    squares:StringTable,
 }
 
 export interface GameState{
@@ -12,28 +14,28 @@ export interface GameState{
     stepNumber:number,
 }
 
-export interface history{
-    square:string[]
-}
-
 export class Game extends React.Component<any,GameState>{
     constructor() {
         super();
+
+        const squares = new StringTable(BoardConsts.ROW_COUNT, BoardConsts.COLUMN_COUNT);
+
         this.state = {
-            history:[{squares:new Array<string>(9)}],
+            history:[{squares:squares}],
             xIsNext: true,
             stepNumber: 0,
         }
     }
-    handleClick(i: number) {
+    handleClick(rowIdx : number, clmIdx : number) {
         const history = this.state.history.slice(0, this.state.stepNumber + 1);
         const current = history[history.length - 1];
-        const sq = current.squares.slice();
-        const winner = calculateWinner(sq);
-        if (winner || sq[i]) {
+        const winner = calculateWinner(current.squares);
+        if (winner || current.squares.GetValue(rowIdx, clmIdx) != null) {
             return;
         }
-        sq[i] = this.state.xIsNext ? 'x' : 'o';
+
+        const val = this.state.xIsNext ? 'x' : 'o';
+        var sq = current.squares.NewUpdatedTable(rowIdx, clmIdx, val);
 
         this.setState({
             history: history.concat([{ squares: sq }]),
@@ -74,7 +76,7 @@ export class Game extends React.Component<any,GameState>{
         return (
             <div className="game">
                 <div className="game-board">
-                    <Board squares={current.squares} onClick={(i:number) => this.handleClick(i)} />
+                    <Board squares={current.squares} onClick={(rowIdx: number, clmIdx: number) => this.handleClick(rowIdx, clmIdx)} />
                 </div>
                 <div className="game-info">
                     <div>{status}</div>
@@ -86,22 +88,83 @@ export class Game extends React.Component<any,GameState>{
 }
 
 
-function calculateWinner(squares: string[]) {
-    const lines = [
-        [0, 1, 2],
-        [3, 4, 5],
-        [6, 7, 8],
-        [0, 3, 6],
-        [1, 4, 7],
-        [2, 5, 8],
-        [0, 4, 8],
-        [2, 4, 6],
-    ];
-    for (let i = 0; i < lines.length; i++) {
-        const [a, b, c] = lines[i];
-        if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-            return squares[a];
+function calculateWinner(squares: StringTable) {
+
+    //横
+    for (let i = 0; i < squares.rowCount; i++) {
+        const row = squares.sliceRow(i);
+        if (row[0] && row.every(c => row[0] === c)) return row[0];
+    }
+
+    //縦
+    for (let i = 0; i < squares.columnCount; i++) {
+        const clm = squares.sliceColumn(i);
+
+        if (clm[0] && clm.every(c => clm[0] === c)) return clm[0]; 
+    }
+
+    //斜め
+    const skewLen = squares.rowCount <= squares.columnCount ? squares.rowCount : squares.columnCount;
+
+    // //左上→右下
+    for (let ri = 0; ri < squares.rowCount; ri++) {
+        const restRowLen = squares.rowCount - ri;
+        if (restRowLen < skewLen) break;
+
+        for (let ci = 0; ci < squares.columnCount; ci++) {
+            const restClmLen = squares.columnCount - ci;
+            if (restClmLen < skewLen) break;
+
+            let val : string = null;
+            let isAllMatched = true;
+            for (let i = 0; i < skewLen; i++) {
+                const tmpVal = squares.GetValue(ri + i, ci + i);
+                if (tmpVal == null) {
+                    isAllMatched = false;
+                    break;
+                }
+                if (val == null) {
+                    val = tmpVal;
+                    continue;
+                }
+                if (val !== tmpVal) {
+                    isAllMatched = false;
+                    break;
+                }
+            }
+            if (isAllMatched) return val;
         }
     }
+
+    // //右上→左下
+    for (let ri = 0; ri < squares.rowCount; ri++) {
+        const restRowLen = squares.rowCount - ri;
+        if (restRowLen < skewLen) break;
+
+        for (let ci = squares.columnCount - 1; 0 <= ci; ci--) {
+            const restClmLen = ci + 1;
+            if (restClmLen < skewLen) break;
+
+            let val : string = null;
+            let isAllMatched = true;
+            for (let i = 0; i < skewLen; i++) {
+                const tmpVal = squares.GetValue(ri + i, ci - i);
+                if (tmpVal == null) {
+                    isAllMatched = false;
+                    break;
+                }
+                if (val == null) {
+                    val = tmpVal;
+                    continue;
+                }
+                if (val !== tmpVal) {
+                    isAllMatched = false;
+                    break;
+                }
+            }
+            if (isAllMatched) return val;
+        }
+    }
+
     return null;
 }

@@ -1,33 +1,34 @@
 import * as React from "react";
 import {Square} from "./Square";
+import {StringTable} from "../../StringTable";
 
 export interface BoardProps extends React.Props<any> {
-    squares: string[],
-    onClick(i : number) : void,
+    squares: StringTable,
+    onClick(rowIdx : number, clmIdx : number) : void,
 }
 
 export class Board extends React.Component<BoardProps, undefined>{
-    renderSquare(i:number){
-        return <Square value={this.props.squares[i]} onClick={()=>this.props.onClick(i)}/>;
+
+    renderSquare(rowIdx : number, clmIdx : number){
+        return <Square value={this.props.squares.GetValue(rowIdx, clmIdx)} onClick={()=>this.props.onClick(rowIdx, clmIdx)}/>;
     }
     render() {
+        let divs = [];
+
+        for (let ri = 0; ri < this.props.squares.rowCount; ri++) {
+            let sqs = [];
+
+            var row = this.props.squares.sliceRow(ri);
+            for (let ci = 0; ci < row.length; ci++) {
+                sqs.push(this.renderSquare(ri, ci));
+            }
+
+            divs.push(<div className="board-row">{sqs}</div>);
+        }
+
         return (
             <div>
-                <div className="board-row">
-                    {this.renderSquare(0)}
-                    {this.renderSquare(1)}
-                    {this.renderSquare(2)}
-                </div>
-                <div className="board-row">
-                    {this.renderSquare(3)}
-                    {this.renderSquare(4)}
-                    {this.renderSquare(5)}
-                </div>
-                <div className="board-row">
-                    {this.renderSquare(6)}
-                    {this.renderSquare(7)}
-                    {this.renderSquare(8)}
-                </div>
+                {divs}
             </div>
         );
     }
