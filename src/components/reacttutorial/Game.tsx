@@ -4,6 +4,7 @@ import "../../Linq";
 import {StringTable} from "../../StringTable";
 import {BoardConsts} from "./BoardConsts";
 import {PointSet} from "../../PointSet";
+import { Button } from 'react-bootstrap';
 
 export interface BoardState{
     squares:StringTable,
@@ -13,6 +14,7 @@ export interface GameState{
     history:BoardState[],
     xIsNext:boolean,
     stepNumber:number,
+    isAsc:boolean,
 }
 
 export class Game extends React.Component<any,GameState>{
@@ -25,6 +27,7 @@ export class Game extends React.Component<any,GameState>{
             history:[{squares:squares}],
             xIsNext: true,
             stepNumber: 0,
+            isAsc: true,
         }
     }
     handleClick(rowIdx : number, clmIdx : number) {
@@ -35,7 +38,7 @@ export class Game extends React.Component<any,GameState>{
             return;
         }
 
-        const val = this.state.xIsNext ? 'x' : 'o';
+        const val = this.state.xIsNext ? BoardConsts.X_SYMBOL : BoardConsts.O_SYMBOL;
         var sq = current.squares.NewUpdatedTable(rowIdx, clmIdx, val);
 
         this.setState({
@@ -52,10 +55,17 @@ export class Game extends React.Component<any,GameState>{
         });
     }
 
+    private toggleSort() {
+        this.setState({
+            isAsc: !this.state.isAsc,
+        });
+    }
+
     render() {
         const history = this.state.history;
         const current = history[this.state.stepNumber];
         const winner_points = calculateWinner(current.squares);
+        const sortSymbol = this.state.isAsc ? "▲" : "▼";
 
         let status : string;
         let pointset : PointSet;
@@ -63,7 +73,7 @@ export class Game extends React.Component<any,GameState>{
             status = 'Winner :' + winner_points[0];
             pointset = winner_points[1];
         } else {
-            status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+            status = 'Next player: ' + (this.state.xIsNext ? BoardConsts.X_SYMBOL : BoardConsts.O_SYMBOL);
             pointset = new PointSet(null);
         }
 
@@ -78,6 +88,8 @@ export class Game extends React.Component<any,GameState>{
             );
         });
 
+        const olMoves = this.state.isAsc ? <ol>{moves}</ol> : <ol reversed>{moves.reverse()}</ol>;
+
         return (
             <div className="game">
                 <div className="game-board">
@@ -85,8 +97,11 @@ export class Game extends React.Component<any,GameState>{
                            highlightedPoints={pointset} />
                 </div>
                 <div className="game-info">
-                    <div>{status}</div>
-                    <ol>{moves}</ol>
+                    <div className="status">{status}</div>
+
+                    <Button className="button-sort" bsSize="xsmall" style={{padding:0}} onClick={() => this.toggleSort()}>{sortSymbol}</Button>
+
+                    {olMoves}
                 </div>
             </div>
         );

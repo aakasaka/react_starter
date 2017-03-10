@@ -7,7 +7,12 @@ body {
 }
 
 ol, ul {
-  padding-left: 30px;
+  padding-left: 16px;
+}
+
+.board {
+  margin-top: 10px;
+  margin-left: 10px;
 }
 
 .board-row:after {
@@ -17,22 +22,17 @@ ol, ul {
 }
 
 .status {
+  margin-top: 8px;
+  font-size: 24px;
   margin-bottom: 10px;
 }
 
 .square {
-  background: #fff;
-  border: 1px solid #999;
   float: left;
-  font-size: 24px;
-  font-weight: bold;
-  line-height: 34px;
-  height: 34px;
+  height: 46px;
   margin-right: -1px;
   margin-top: -1px;
-  padding: 0;
-  text-align: center;
-  width: 34px;
+  width: 46px;
 }
 
 .square:focus {
@@ -41,6 +41,11 @@ ol, ul {
 
 .kbd-navigation .square:focus {
   background: #ddd;
+}
+
+.button-sort {
+  width: 18px;
+  height: 18px;
 }
 
 .game {
