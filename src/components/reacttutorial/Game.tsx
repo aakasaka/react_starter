@@ -1,9 +1,11 @@
 import * as React from "react";
 import {Board} from "./Board";
 import "../../Linq";
+import {StringTable} from "../../StringTable";
+import {BoardConsts} from "./BoardConsts";
 
 export interface BoardState{
-    squares:string[][]
+    squares:StringTable,
 }
 
 export interface GameState{
@@ -16,14 +18,7 @@ export class Game extends React.Component<any,GameState>{
     constructor() {
         super();
 
-        var squares = new Array<string[]>(BoardConsts.ROW_COUNT);
-        for (let ri = 0; ri < squares.length; ri++) {
-            const row = new Array(BoardConsts.COLUMN_COUNT);
-            for (let ci = 0; ci < row.length; ci++) {
-                row[ci] = null;
-            }
-            squares[ri] = row;
-        }
+        const squares = new StringTable(BoardConsts.ROW_COUNT, BoardConsts.COLUMN_COUNT);
 
         this.state = {
             history:[{squares:squares}],
@@ -34,16 +29,13 @@ export class Game extends React.Component<any,GameState>{
     handleClick(rowIdx : number, clmIdx : number) {
         const history = this.state.history.slice(0, this.state.stepNumber + 1);
         const current = history[history.length - 1];
-        const sq = current.squares.slice();
-        const winner = calculateWinner(sq);
-        if (winner || sq[rowIdx][clmIdx] != null) {
+        const winner = calculateWinner(current.squares);
+        if (winner || current.squares.GetValue(rowIdx, clmIdx) != null) {
             return;
         }
 
-        //TODO クラス化して隠蔽
-        var row = sq[rowIdx].slice();
-        row[clmIdx] = this.state.xIsNext ? 'x' : 'o';
-        sq[rowIdx] = row;
+        const val = this.state.xIsNext ? 'x' : 'o';
+        var sq = current.squares.NewUpdatedTable(rowIdx, clmIdx, val);
 
         this.setState({
             history: history.concat([{ squares: sq }]),
@@ -96,39 +88,37 @@ export class Game extends React.Component<any,GameState>{
 }
 
 
-function calculateWinner(squares: string[][]) {
+function calculateWinner(squares: StringTable) {
 
     //横
-    for (let i = 0; i < squares.length; i++) {
-        const row = squares[i];
+    for (let i = 0; i < squares.rowCount; i++) {
+        const row = squares.sliceRow(i);
         if (row[0] && row.every(c => row[0] === c)) return row[0];
     }
 
     //縦
-    //TODO 要素数が統一されていることのアサーション（または配列のクラス化） 
-    const clmLen = squares.minOr(r => r.length, 0);
-    for (let i = 0; i < clmLen; i++) {
-        const clm = squares.map(r => r[i]);
+    for (let i = 0; i < squares.columnCount; i++) {
+        const clm = squares.sliceColumn(i);
 
         if (clm[0] && clm.every(c => clm[0] === c)) return clm[0]; 
     }
 
     //斜め
-    const skewLen = squares.length <= clmLen ? squares.length : clmLen;
+    const skewLen = squares.rowCount <= squares.columnCount ? squares.rowCount : squares.columnCount;
 
     // //左上→右下
-    for (let ri = 0; ri < squares.length; ri++) {
-        const restRowLen = squares.length - ri;
+    for (let ri = 0; ri < squares.rowCount; ri++) {
+        const restRowLen = squares.rowCount - ri;
         if (restRowLen < skewLen) break;
 
-        for (let ci = 0; ci < clmLen; ci++) {
-            const restClmLen = clmLen - ci;
+        for (let ci = 0; ci < squares.columnCount; ci++) {
+            const restClmLen = squares.columnCount - ci;
             if (restClmLen < skewLen) break;
 
             let val : string = null;
             let isAllMatched = true;
             for (let i = 0; i < skewLen; i++) {
-                const tmpVal = squares[ri + i][ci + i];
+                const tmpVal = squares.GetValue(ri + i, ci + i);
                 if (tmpVal == null) {
                     isAllMatched = false;
                     break;
@@ -147,18 +137,18 @@ function calculateWinner(squares: string[][]) {
     }
 
     // //右上→左下
-    for (let ri = 0; ri < squares.length; ri++) {
-        const restRowLen = squares.length - ri;
+    for (let ri = 0; ri < squares.rowCount; ri++) {
+        const restRowLen = squares.rowCount - ri;
         if (restRowLen < skewLen) break;
 
-        for (let ci = clmLen - 1; 0 <= ci; ci--) {
+        for (let ci = squares.columnCount - 1; 0 <= ci; ci--) {
             const restClmLen = ci + 1;
             if (restClmLen < skewLen) break;
 
             let val : string = null;
             let isAllMatched = true;
             for (let i = 0; i < skewLen; i++) {
-                const tmpVal = squares[ri + i][ci - i];
+                const tmpVal = squares.GetValue(ri + i, ci - i);
                 if (tmpVal == null) {
                     isAllMatched = false;
                     break;
