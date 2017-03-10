@@ -1,17 +1,19 @@
 import * as React from "react";
 import {Square} from "./Square";
 import {StringTable} from "../../StringTable";
+import {PointSet} from "../../PointSet";
 
 export interface BoardProps extends React.Props<any> {
     squares: StringTable,
     onClick(rowIdx : number, clmIdx : number) : void,
+    highlightedPoints : PointSet;
 }
 
 export class Board extends React.Component<BoardProps, undefined>{
 
     renderSquare(rowIdx : number, clmIdx : number){
         return <Square value={this.props.squares.GetValue(rowIdx, clmIdx)} onClick={()=>this.props.onClick(rowIdx, clmIdx)}
-                       isHighlighted={true/*TODO*/} />;
+                       isHighlighted={this.props.highlightedPoints.contains(rowIdx, clmIdx)} />;
     }
     render() {
         let divs = [];
