@@ -1,9 +1,11 @@
-body {
+/*
+.body {
   font: 14px "Century Gothic", Futura, sans-serif;
   margin: 20px;
 }
+*/
 
-ol, ul {
+.ol {
   padding-left: 16px;
 }
 
@@ -12,7 +14,7 @@ ol, ul {
   margin-left: 10px;
 }
 
-.board-row:after {
+.boardRow:after {
   clear: both;
   content: "";
   display: table;
@@ -36,11 +38,11 @@ ol, ul {
   outline: none;
 }
 
-.kbd-navigation .square:focus {
+.kbdNavigation .square:focus {
   background: #ddd;
 }
 
-.button-sort {
+.buttonSort {
   width: 18px;
   height: 18px;
 }
@@ -50,7 +52,7 @@ ol, ul {
   flex-direction: row;
 }
 
-.game-info {
+.gameInfo {
   margin-left: 20px;
 }
 
@@ -58,7 +60,7 @@ ol, ul {
   font-weight: normal;
 }
 
-.history-current {
+.historyCurrent {
   font-weight: bold;
 }
 
