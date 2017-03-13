@@ -1,0 +1,22 @@
+.status {
+  margin-top: 8px;
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.buttonSort {
+  width: 18px;
+  height: 18px;
+}
+
+.game {
+  display: flex;
+  flex-direction: row;
+}
+
+.info {
+  margin-left: 20px;
+}
+
+
+
