@@ -1,0 +1,10 @@
+.outline {
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+.row:after {
+  clear: both;
+  content: "";
+  display: table;
+}

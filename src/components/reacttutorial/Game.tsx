@@ -5,6 +5,8 @@ import {StringTable} from "../../StringTable";
 import {BoardConsts} from "./BoardConsts";
 import {PointSet} from "../../PointSet";
 import { Button } from 'react-bootstrap';
+import * as cssGame from '../../css/game.css';
+import * as cssHis from '../../css/history.css';
 
 export interface BoardState{
     squares:StringTable,
@@ -79,7 +81,7 @@ export class Game extends React.Component<any,GameState>{
 
         const moves = history.map((s, i) => {
             const text = (i === 0) ? 'Game start' : ('Move #' + i);
-            const clsName = i === this.state.stepNumber ? "history-current" : "history";
+            const clsName = i === this.state.stepNumber ? cssHis.current : cssHis.normal;
 
             return (
                 <li key={i}>
@@ -88,18 +90,20 @@ export class Game extends React.Component<any,GameState>{
             );
         });
 
-        const olMoves = this.state.isAsc ? <ol>{moves}</ol> : <ol reversed>{moves.reverse()}</ol>;
+        const olMoves = this.state.isAsc
+                          ? <ol className={cssHis.ol}>{moves}</ol>
+                          : <ol className={cssHis.ol} reversed>{moves.reverse()}</ol>;
 
         return (
-            <div className="game">
-                <div className="game-board">
+            <div className={cssGame.game}>
+                <div>
                     <Board squares={current.squares} onClick={(rowIdx: number, clmIdx: number) => this.handleClick(rowIdx, clmIdx)}
                            highlightedPoints={pointset} />
                 </div>
-                <div className="game-info">
-                    <div className="status">{status}</div>
+                <div className={cssGame.info}>
+                    <div className={cssGame.status}>{status}</div>
 
-                    <Button className="button-sort" bsSize="xsmall" style={{padding:0}} onClick={() => this.toggleSort()}>{sortSymbol}</Button>
+                    <Button className={cssGame.buttonSort} bsSize="xsmall" style={{padding:0}} onClick={() => this.toggleSort()}>{sortSymbol}</Button>
 
                     {olMoves}
                 </div>

@@ -2,6 +2,7 @@ import * as React from "react";
 import {Square} from "./Square";
 import {StringTable} from "../../StringTable";
 import {PointSet} from "../../PointSet";
+import * as styles from "../../css/board.css";
 
 export interface BoardProps extends React.Props<any> {
     squares: StringTable,
@@ -26,11 +27,11 @@ export class Board extends React.Component<BoardProps, undefined>{
                 sqs.push(this.renderSquare(ri, ci));
             }
 
-            divs.push(<div className="board-row">{sqs}</div>);
+            divs.push(<div className={styles.row}>{sqs}</div>);
         }
 
         return (
-            <div className="board">
+            <div className={styles.outline}>
                 {divs}
             </div>
         );
